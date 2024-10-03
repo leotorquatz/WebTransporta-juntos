@@ -1,7 +1,7 @@
 /* 
 Nome: Leonardo Torquato de Andrade
 TransportaWeb
-Data: 19/09/2024
+Data: 03/10/2024
 */
 
 body {
@@ -183,13 +183,9 @@ body {
 }
 
 .footer {
-    display: flex;
-    justify-content: space-between; 
     background-color: #BB4848;
     padding: 1rem;
     border-top: 2px solid #c7c7c7;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
 }
 
 .logobaixa {
