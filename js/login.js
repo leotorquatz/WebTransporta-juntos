@@ -29,38 +29,45 @@ const validarLogin = async () => {
         return;
     }
 
-    const url = 'https://crud-03-09.onrender.com/v1/transportaweb/empresas';
+    const urls = [
+        'https://crud-03-09.onrender.com/v1/transportaweb/empresas',
+        'https://crud-03-09.onrender.com/v1/transportaweb/motoristas' 
+    ];
 
     try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error('Erro ao buscar as empresas');
-        }
-
-        const data = await response.json();
-        console.log('Dados retornados:', data);
-
-        // Acessando o array de empresas
-        const empresas = data.empresas || []; // Ajustado para acessar empresas
-        console.log('Empresas:', empresas);
-
-        if (empresas.length === 0) {
-            alert('Nenhuma empresa encontrada.');
-            return; // Saia da função se não houver empresas
-        }
-
         let validaUser = false;
 
-        empresas.forEach(empresa => {
-            // Supondo que a empresa tenha um campo 'senha' para validação
-            console.log(`Verificando empresa: ${empresa.nome} com senha: ${empresa.senha}`);
-            if (empresa.email === email && empresa.senha === senha) { // Ajuste conforme necessário
-                validaUser = true;
-                alert('Login efetuado com sucesso!');
-                window.location.href = ''; // Redirecionamento
+        for (const url of urls) {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error('Erro ao buscar as informações');
             }
-        });
+
+            const data = await response.json();
+            console.log('Dados retornados:', data);
+
+            const usuarios = data.empresas || data.motoristas || []; // Ajustado para acessar motoristas
+            console.log('Usuários:', usuarios);
+
+            if (usuarios.length === 0) {
+                alert('Nenhum usuário encontrado.');
+                return; // Saia da função se não houver usuários
+            }
+
+            usuarios.forEach(usuario => {
+                console.log(`Verificando usuário: ${usuario.nome} com senha: ${usuario.senha}`);
+                if (usuario.email === email && usuario.senha === senha) { // Ajuste conforme necessário
+                    validaUser = true;
+                    alert('Login efetuado com sucesso!');
+                    window.location.href = '../html/home.html';
+                }
+            });
+
+            if (validaUser) {
+                break; // Sai do loop se o usuário foi encontrado
+            }
+        }
 
         if (!validaUser) {
             alert('Usuário não cadastrado');
