@@ -10,55 +10,35 @@ if (cadastromotorista1) {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('JavaScript carregado');
-    const cpf = document.getElementById('cpf');
-    const cpfError = document.getElementById('cpfError'); // Elemento da mensagem de erro do CPF
+    const foto_url = document.getElementById('foto_url');
+    const fotoError = document.getElementById('fotoError'); // Elemento da mensagem de erro da foto
     const email = document.getElementById('email');
     const emailError = document.getElementById('emailError'); // Elemento da mensagem de erro do e-mail
     const senha = document.getElementById('senha');
     const senhaError = document.getElementById('senhaError'); // Elemento da mensagem de erro da senha
+    const cnh = document.getElementById('cnh');
+    const cnhError = document.getElementById('cnhError'); // Elemento da mensagem de erro da CNH
     const button = document.getElementById('next');
 
-    console.log('cpf:', cpf);
+    console.log('foto_url:', foto_url);
     console.log('email:', email);
     console.log('senha:', senha);
+    console.log('cnh:', cnh);
     console.log('button:', button);
 
-    if (!cpf || !email || !senha || !button) {
+    if (!foto_url || !email || !senha || !cnh || !button) {
         console.error('Um ou mais elementos não foram encontrados.');
         return;
     }
 
-    // Função para validar CPF
-    function validarCPF(cpf) {
-        cpf = cpf.replace(/[^\d]/g, ''); // Remove caracteres que não sejam dígitos
-        if (cpf.length !== 11) return false;
-
-        let soma = 0;
-        let resto;
-
-        // Validação do primeiro dígito
-        for (let i = 1; i <= 9; i++) {
-            soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-        }
-        resto = (soma * 10) % 11;
-        if (resto === 10 || resto === 11) resto = 0;
-        if (resto !== parseInt(cpf.substring(9, 10))) return false;
-
-        soma = 0;
-        // Validação do segundo dígito
-        for (let i = 1; i <= 10; i++) {
-            soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-        }
-        resto = (soma * 10) % 11;
-        if (resto === 10 || resto === 11) resto = 0;
-        if (resto !== parseInt(cpf.substring(10, 11))) return false;
-
-        return true;
+    // Função para validar CNH
+    function validarCNH(cnh) {
+        const regex = /^\d{11}$/; // Valida CNH com 11 dígitos
+        return regex.test(cnh);
     }
 
-    // Função para validar o e-mail
+    // Função para validar e-mail
     function validarEmail(email) {
-        // Verifica se o e-mail tem pelo menos 5 caracteres e inclui o símbolo '@'
         if (email.length >= 5 && email.includes('@')) {
             return true;
         }
@@ -77,48 +57,45 @@ document.addEventListener('DOMContentLoaded', function() {
     button.addEventListener('click', async (event) => {
         event.preventDefault();  // Impede o comportamento padrão do formulário
 
-        const cpfInput = cpf.value;
+        const foto_urlInput = foto_url.value;
         const emailInput = email.value;
         const senhaInput = senha.value;
+        const cnhInput = cnh.value;
 
         // Limpar mensagens de erro anteriores
-        cpfError.style.display = 'none';
-        cpfError.textContent = '';
+        fotoError.style.display = 'none';
+        fotoError.textContent = '';
         emailError.style.display = 'none';
         emailError.textContent = '';
         senhaError.style.display = 'none';
         senhaError.textContent = '';
+        cnhError.style.display = 'none';
+        cnhError.textContent = '';
 
         // Validação dos campos
-        if (!cpfInput || !senhaInput || !emailInput) {
+        if (!foto_urlInput || !emailInput || !senhaInput || !cnhInput) {
             console.error('Todos os campos são obrigatórios.');
             return;
         }
 
-        // Validação do CPF
-        if (!validarCPF(cpfInput)) {
-            cpfError.textContent = 'CPF inválido, deve conter 11 caracteres. Insira novamente com pontos(.), hífens(-) ou somente números.';
-            cpfError.style.display = 'block';  // Exibe a mensagem de erro
+        // Validação da foto
+        if (!foto_urlInput) {
+            fotoError.textContent = 'URL da foto é obrigatória.';
+            fotoError.style.display = 'block';  // Exibe a mensagem de erro
             return;
         }
 
-        // Validação do e-mail
-        if (!validarEmail(emailInput)) {
-            emailError.textContent = 'E-mail inválido, deve conter pelo menos 5 caracteres e incluir "@"';
-            emailError.style.display = 'block';  // Exibe a mensagem de erro do e-mail
+        // Validação da CNH
+        if (!validarCNH(cnhInput)) {
+            cnhError.textContent = 'CNH inválida. Deve conter 11 dígitos.';
+            cnhError.style.display = 'block';  // Exibe a mensagem de erro
             return;
         }
 
-        // Validação da senha
-        if (!validarSenha(senhaInput)) {
-            senhaError.textContent = 'Senha inválida, deve conter pelo menos 8 caracteres incluindo uma letra maiúscula';
-            senhaError.style.display = 'block';  // Exibe a mensagem de erro da senha
-            return;
-        }
-
-        cadastromotorista1.cpf = cpfInput;
+        cadastromotorista1.foto_url = foto_urlInput;
         cadastromotorista1.email = emailInput;
         cadastromotorista1.senha = senhaInput;
+        cadastromotorista1.cnh = cnhInput;
 
         try {
             // Tenta enviar os dados
