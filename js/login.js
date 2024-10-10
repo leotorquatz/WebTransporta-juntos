@@ -60,7 +60,7 @@ const validarLogin = async () => {
                 if (usuario.email === email && usuario.senha === senha) { // Ajuste conforme necessário
                     validaUser = true;
                     alert('Login efetuado com sucesso!');
-                    window.location.href = '../html/home.html';
+                    window.location.href = '/html/paginaHome.html';
                 }
             });
 
