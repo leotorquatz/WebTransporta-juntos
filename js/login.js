@@ -29,45 +29,44 @@ const validarLogin = async () => {
         return;
     }
 
-    const urls = [
-        'https://crud-03-09.onrender.com/v1/transportaweb/empresas',
-        'https://crud-03-09.onrender.com/v1/transportaweb/motoristas' 
-    ];
+    // Determina a URL com base na seleção do usuário
+    let url;
+    if (empresa.checked) {
+        url = 'https://crud-03-09.onrender.com/v1/transportaweb/empresas';
+    } else if (funcionario.checked) {
+        url = 'https://crud-03-09.onrender.com/v1/transportaweb/motoristas';
+    } else {
+        alert('Por favor, selecione uma função: Empresa ou Funcionário.');
+        return;
+    }
 
     try {
-        let validaUser = false;
+        const response = await fetch(url);
 
-        for (const url of urls) {
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error('Erro ao buscar as informações');
-            }
-
-            const data = await response.json();
-            console.log('Dados retornados:', data);
-
-            const usuarios = data.empresas || data.motoristas || []; // Ajustado para acessar motoristas
-            console.log('Usuários:', usuarios);
-
-            if (usuarios.length === 0) {
-                alert('Nenhum usuário encontrado.');
-                return; // Saia da função se não houver usuários
-            }
-
-            usuarios.forEach(usuario => {
-                console.log(`Verificando usuário: ${usuario.nome} com senha: ${usuario.senha}`);
-                if (usuario.email === email && usuario.senha === senha) { // Ajuste conforme necessário
-                    validaUser = true;
-                    alert('Login efetuado com sucesso!');
-                    window.location.href = '/html/paginaHome.html';
-                }
-            });
-
-            if (validaUser) {
-                break; // Sai do loop se o usuário foi encontrado
-            }
+        if (!response.ok) {
+            throw new Error('Erro ao buscar as informações');
         }
+
+        const data = await response.json();
+        console.log('Dados retornados:', data);
+
+        const usuarios = data.empresas || data.motoristas || []; // Ajustado para acessar motoristas
+        console.log('Usuários:', usuarios);
+
+        if (usuarios.length === 0) {
+            alert('Nenhum usuário encontrado.');
+            return; // Saia da função se não houver usuários
+        }
+
+        let validaUser = false;
+        usuarios.forEach(usuario => {
+            console.log(`Verificando usuário: ${usuario.nome} com senha: ${usuario.senha}`);
+            if (usuario.email === email && usuario.senha === senha) { // Ajuste conforme necessário
+                validaUser = true;
+                alert('Login efetuado com sucesso!');
+                window.location.href = '/html/paginaHome.html';
+            }
+        });
 
         if (!validaUser) {
             alert('Usuário não cadastrado');
