@@ -25,7 +25,7 @@ const validarLogin = async () => {
     const senha = password.value.trim();
 
     if (email === '' || senha === '') {
-        alert('Preencha os campos!');
+        alert('Os campos são obrigatórios!');
         return;
     }
 
@@ -36,7 +36,7 @@ const validarLogin = async () => {
     } else if (funcionario.checked) {
         url = 'https://crud-03-09.onrender.com/v1/transportaweb/motoristas';
     } else {
-        alert('Por favor, selecione uma função: Empresa ou Funcionário.');
+        alert('Ocorreu um erro: Você deve selecionar uma opção entre motorista e empresa para fazer login!!');
         return;
     }
 
@@ -69,7 +69,7 @@ const validarLogin = async () => {
         });
 
         if (!validaUser) {
-            alert('Usuário não cadastrado');
+            alert('Usuário não cadastrado no banco de dados');
         }
 
     } catch (error) {
